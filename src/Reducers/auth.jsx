@@ -1,28 +1,30 @@
 import { ERROR, SIGNIN, LOGOUT } from "../Constants/actionTypes";
 const token = localStorage.getItem("TourismSecurityTokenAdmin");
-const name = localStorage.getItem("TourismAuthName");
-const email = localStorage.getItem("TourismAuthEmail");
-const initialState = token ? { token, user: { name, email } } : {};
+const user = JSON.parse(localStorage.getItem("TourismAdmin"));
+const initialState = token ? { token, user } : {};
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SIGNIN:
       console.log(action.payload.user);
       if (action?.payload.user.role === "Admin") {
+        console.log(action.payload.token);
         localStorage.setItem(
           "TourismSecurityTokenAdmin",
           action?.payload.token
         );
-        localStorage.setItem("TourismAuthName", action?.payload.user.name);
-        localStorage.setItem("TourismAuthEmail", action?.payload.user.email);
+        localStorage.setItem(
+          "TourismAdmin",
+          JSON.stringify(action?.payload.user)
+        );
         window.location.href = "/";
         return { ...state, user: action?.payload.user };
       } else {
-        return { ...state, error: "Login Failed, login as admin" };
+        return { ...state, error: "Login failed, You are not an Admin" };
       }
     case LOGOUT:
       localStorage.removeItem("TourismSecurityTokenAdmin");
-      localStorage.removeItem("TourismAuthName");
-      localStorage.removeItem("TourismAuthEmail");
+      localStorage.removeItem("TourismAdmin");
+      window.location.href = "/";
       return state;
     case ERROR:
       return { ...state, error: action.payload };

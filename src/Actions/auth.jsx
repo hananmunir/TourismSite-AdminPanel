@@ -6,10 +6,13 @@ export const signIn = (email, password) => async (dispatch) => {
     const { data } = await api.signIn(email, password);
 
     dispatch({ type: SIGNIN, payload: data });
-   
   } catch (error) {
     console.log(error);
-    if (error.response.status === 401 || error.response.status === 403) {
+    if (
+      error.response.status === 401 ||
+      error.response.status === 403 ||
+      error.response.status === 404
+    ) {
       dispatch({ type: ERROR, payload: "Email or Password Incorrect" });
     }
   }

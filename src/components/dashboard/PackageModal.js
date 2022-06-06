@@ -11,7 +11,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  FormFeedback,
   Label,
   Input,
   FormGroup,
@@ -19,7 +18,7 @@ import {
 } from "reactstrap";
 import { fetchPackage } from "../../api";
 import { useDispatch } from "react-redux";
-import { createPackage } from "../../Actions/packages";
+import { createPackage, updatePackage } from "../../Actions/packages";
 
 const data = {
   title: "",
@@ -29,30 +28,8 @@ const data = {
   description: "",
 };
 export default function PackageModal({ update, show, setShow, id }) {
-  const [formData, setFormData] = useState(data);
   const dispatch = useDispatch();
-  const fd = new FormData();
-  const [selectedFile, setSelectedFile] = useState(null);
-  useEffect(() => {
-    if (id) {
-      fetchPackage(id)
-        .then((res) => {
-          setFormData({
-            title: res.data.title,
-            destination: res.data.destination,
-            departureDate: res.data.departureDate,
-            cost: res.data.cost,
-            duration: res.data.duration,
-            description: res.data.description,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      setFormData(data);
-    }
-  }, [id]);
+  const [formData, setFormData] = useState(data);
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -60,7 +37,49 @@ export default function PackageModal({ update, show, setShow, id }) {
       key: "selection",
     },
   ]);
+  const [selectedFile, setSelectedFile] = useState();
+  const fd = new FormData();
+  useEffect(() => {
+    if (id) {
+      fetchPackage(id)
+        .then((res) => {
+          console.log("Here");
+          console.log(res);
+          setFormData({
+            title: res.data.title,
+            destination: res.data.destination,
+            cost: res.data.cost,
 
+            description: res.data.description,
+          });
+          setDate([
+            {
+              startDate: new Date(res.data.departureDate),
+              endDate: addDays(
+                new Date(res.data.departureDate),
+                Number(res.data.duration)
+              ),
+              key: "selection",
+            },
+          ]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setFormData(data);
+    }
+  }, [id, show]);
+
+  const checkValidity = () => {
+    return (
+      formData.title.length > 0 &&
+      formData.destination.length > 0 &&
+      formData.cost > 0 &&
+      formData.description.length > 0 &&
+      selectedFile
+    );
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -70,28 +89,26 @@ export default function PackageModal({ update, show, setShow, id }) {
     fd.append("date", date[0].startDate);
     fd.append("cost", formData.cost);
     fd.append("duration", differenceInDays(date[0].endDate, date[0].startDate));
-    fd.append("desc", formData.description);
+    fd.append("description", formData.description);
+
     fd.append("image", selectedFile);
-    console.log(fd.get("date"));
   };
-  const clearFormData = () => {
-    for (var key of formData.keys()) {
-      // here you can add filtering conditions
-      formData.delete(key);
-    }
-  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     appendFormData();
-    if (update) {
+    if (update && id) {
+      dispatch(updatePackage(id, fd));
     } else {
       dispatch(createPackage(fd));
     }
-
-    //clearFormData();
+    setShow(false);
+    //Clears fields
+    setFormData(data);
+    setSelectedFile();
+    appendFormData();
   };
 
-  //console.log(fetchPackage(id));
   return (
     <div>
       <Modal isOpen={show} toggle={() => setShow(false)}>
@@ -99,87 +116,81 @@ export default function PackageModal({ update, show, setShow, id }) {
         <ModalBody>
           <Form>
             <FormGroup>
-              <Label>Title</Label>
+              <Label>Title*</Label>
               <Input
-                name="title"
+                name='title'
                 value={formData.title}
                 onChange={handleChange}
-                invalid={false}
+                minLength={3}
+                required
               />
-              <FormFeedback valid>
-                Title Should be greater than 3 Characters
-              </FormFeedback>
             </FormGroup>
             <FormGroup>
-              <Label>Destination</Label>
+              <Label>Destination*</Label>
               <Input
-                name="destination"
+                name='destination'
                 value={formData.destination}
                 onChange={handleChange}
-                invalid={false}
+                required
               />
-              <FormFeedback valid>Destination is required</FormFeedback>
             </FormGroup>
             <FormGroup>
-              <div className="d-flex flex-column">
-                <Label>Departure Date</Label>
+              <div className='d-flex flex-column'>
+                <Label>Departure Date*</Label>
                 <DateRange
                   onChange={(item) => setDate([item.selection])}
                   showSelectionPreview={true}
                   editableDateInputs={true}
                   moveRangeOnFirstSelection={false}
                   months={2}
-                  direction="horizontal"
+                  direction='horizontal'
                   ranges={date}
                   minDate={new Date()}
                 />
               </div>
-              <FormFeedback valid>Date is required</FormFeedback>
             </FormGroup>
             <FormGroup>
-              <Label>Cost</Label>
+              <Label>Cost*</Label>
               <Input
-                name="cost"
+                name='cost'
                 value={formData.cost}
-                type="Number"
+                type='Number'
                 onChange={handleChange}
-                invalid={false}
-                min="0"
+                required
+                min='0'
               />
-              <FormFeedback valid>
-                Title Should be greater than 3 Characters
-              </FormFeedback>
             </FormGroup>
             <FormGroup>
-              <Label>Description</Label>
+              <Label>Description*</Label>
               <Input
-                name="description"
+                name='description'
                 value={formData.description}
-                type="textarea"
-                invalid={false}
+                type='textarea'
+                minLength={15}
+                require
                 onChange={handleChange}
-                rows="4"
+                rows='4'
               />
-              <FormFeedback valid>
-                Description should be more than 15 characters
-              </FormFeedback>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleFile">File</Label>
+              <Label for='exampleFile'>Image{update ? "" : "*"} </Label>
               <Input
-                id="exampleFile"
-                name="file"
-                type="file"
+                id='exampleFile'
+                name='file'
+                type='file'
                 onChange={(e) => setSelectedFile(e.target.files[0])}
-                invalid={false}
+                required
               />
-              <FormFeedback invalid>Image is required</FormFeedback>
             </FormGroup>
           </Form>
         </ModalBody>
         <ModalFooter>
           <Button onClick={() => setShow(false)}>Cancel</Button>
-          <Button color="primary" onClick={handleSubmit}>
+          <Button
+            disabled={!checkValidity()}
+            color='primary'
+            onClick={handleSubmit}
+          >
             {update ? "Update" : "Add"}
           </Button>{" "}
         </ModalFooter>

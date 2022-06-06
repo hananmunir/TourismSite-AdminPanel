@@ -21,26 +21,26 @@ const ThemeRoutes = [
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="/starter" /> },
+      { path: "/", element: <Navigate to='/starter' /> },
       {
         path: "/starter",
         exact: true,
-        element: user ? <Starter /> : <Navigate to="/signin" />,
+        element: user ? <Starter /> : <Navigate to='/signin' />,
       },
 
       {
         path: "/packages",
         exact: true,
-        element: user ? <Packages /> : <Navigate to="/signin" />,
+        element: user ? <Packages /> : <Navigate to='/signin' />,
       },
       {
         path: "/about",
         exact: true,
-        element: user ? <Users /> : <Navigate to="/signin" />,
+        element: user ? <Users /> : <Navigate to='/signin' />,
       },
     ],
   },
-  { path: "/signin", exact: true, element: <SignIn /> },
+  { path: "/signin", exact: true, element: user ? <Starter /> : <SignIn /> },
 ];
 
 export default ThemeRoutes;

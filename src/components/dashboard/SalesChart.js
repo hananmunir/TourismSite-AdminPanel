@@ -5,12 +5,8 @@ const SalesChart = () => {
   const chartoptions = {
     series: [
       {
-        name: "Iphone 13",
-        data: [0, 31, 40, 28, 51, 42, 109, 100],
-      },
-      {
-        name: "Oneplue 9",
-        data: [0, 11, 32, 45, 32, 34, 52, 41],
+        name: "Earnings",
+        data: [5, 16, 12, 28, 42, 49, 35, 39, 33, 38, 22, 12],
       },
     ],
     options: {
@@ -38,6 +34,10 @@ const SalesChart = () => {
           "June",
           "July",
           "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
         ],
       },
     },
@@ -45,14 +45,14 @@ const SalesChart = () => {
   return (
     <Card>
       <CardBody>
-        <CardTitle tag="h5">Sales Summary</CardTitle>
-        <CardSubtitle className="text-muted" tag="h6">
+        <CardTitle tag='h5'>Sales Summary</CardTitle>
+        <CardSubtitle className='text-muted' tag='h6'>
           Yearly Sales Report
         </CardSubtitle>
         <Chart
-          type="area"
-          width="100%"
-          height="390"
+          type='area'
+          width='100%'
+          height='390'
           options={chartoptions.options}
           series={chartoptions.series}
         ></Chart>

@@ -23,16 +23,16 @@ function UserTable() {
       {users ? (
         <Card>
           <CardBody>
-            <div className="d-flex justify-content-between">
+            <div className='d-flex justify-content-between'>
               <div>
-                <CardTitle tag="h5">Users Listing</CardTitle>{" "}
-                <CardSubtitle className="mb-2 text-muted" tag="h6">
+                <CardTitle tag='h5'>Users Listing</CardTitle>{" "}
+                <CardSubtitle className='mb-2 text-muted' tag='h6'>
                   All Users listed
                 </CardSubtitle>
               </div>
             </div>
 
-            <Table className="mt-3 align-middle" responsive borderless>
+            <Table className='mt-3 align-middle' responsive borderless>
               <thead>
                 <tr>
                   <th>No</th>
@@ -43,11 +43,11 @@ function UserTable() {
               </thead>
               <tbody>
                 {users?.map((user, index) => (
-                  <tr key={index} className="border-top">
+                  <tr key={index} className='border-top'>
                     <td>{index}</td>
                     <td>
-                      <div className="d-flex align-items-center p-2">
-                        <h6 className="mb-0">{user.email}</h6>
+                      <div className='d-flex align-items-center p-2'>
+                        <h6 className='mb-0'>{user.name}</h6>
                       </div>
                     </td>
                     <td>{user.email}</td>

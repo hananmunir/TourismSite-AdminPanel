@@ -41,44 +41,47 @@ const Header = () => {
     navigate("/signin");
   };
   return (
-    <Navbar color="dark" dark expand="md">
-      <div className="d-flex align-items-center">
-        <NavbarBrand href="/" className="d-lg-none">
+    <Navbar color='dark' dark expand='md'>
+      <div className='d-flex align-items-center'>
+        <NavbarBrand href='/' className='d-lg-none'>
           <LogoWhite />
         </NavbarBrand>
         <Button
-          color="dark"
-          className="d-lg-none"
+          color='dark'
+          className='d-lg-none'
           onClick={() => showMobilemenu()}
         >
-          <i className="bi bi-list"></i>
+          <i className='bi bi-list'></i>
         </Button>
       </div>
-      <div className="hstack gap-2">
+      <div className='hstack gap-2'>
         <Button
-          color="dark"
-          size="sm"
-          className="d-sm-block d-md-none"
+          color='dark'
+          size='sm'
+          className='d-sm-block d-md-none'
           onClick={Handletoggle}
         >
           {isOpen ? (
-            <i className="bi bi-x"></i>
+            <i className='bi bi-x'></i>
           ) : (
-            <i className="bi bi-three-dots-vertical"></i>
+            <i className='bi bi-three-dots-vertical'></i>
           )}
         </Button>
       </div>
 
       <Collapse navbar isOpen={isOpen}>
-        <Nav className="me-auto" navbar>
+        <Nav className='me-auto' navbar>
           <NavItem>
-            <Link to="/starter" className="nav-link">
+            <a
+              href='https://tourism-web-project.netlify.app/'
+              className='nav-link'
+            >
               User Website
-            </Link>
+            </a>
           </NavItem>
         </Nav>
         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-          <DropdownToggle color="dark">
+          <DropdownToggle color='dark'>
             <span
               style={{
                 padding: "0 1rem",
@@ -91,9 +94,9 @@ const Header = () => {
             </span>
             <img
               src={user1}
-              alt="profile"
-              className="rounded-circle"
-              width="30"
+              alt='profile'
+              className='rounded-circle'
+              width='30'
             ></img>
           </DropdownToggle>
           <DropdownMenu>
